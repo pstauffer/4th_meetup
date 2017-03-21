@@ -1,0 +1,29 @@
+---
+- hosts: all
+
+  tasks:
+    - name: include vault vars
+      include_vars: vault_vars/vault.yml
+      no_log: true
+
+    - name: create configuration file
+      template:
+        src: templates/myconfig.conf.j2
+        dest: /etc/my.conf
+        owner: root
+        group: root
+        mode: 400
+
+    - name: manage ssl private key
+      copy:
+        content: '{{ vault_ssl_private_key }}'
+        dest: /etc/ssl.key
+        owner: root
+        group: root
+        mode: 400
+      no_log: true
+
+    - name: debug
+      debug:
+        msg: '{{ vault_mysql_password }}'
+      no_log: true
